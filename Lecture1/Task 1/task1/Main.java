@@ -1,3 +1,5 @@
+package task1;
+
 import java.util.Scanner;
 
 public class Main {
@@ -21,12 +23,12 @@ public class Main {
         String[] words = inputStr.split("\\s+");
         int lengthArray = words.length;
 
-       for (int i=0; i<lengthArray; i++) {
+        for (int i=0; i<lengthArray; i++) {
            System.out.println(words[i]);
-       }
+        }
 
         //-------- task 1.3 -----------
-                outputStr = inputStr.replace(' ','*');
+        outputStr = inputStr.replace(' ','*');
 
         System.out.println(outputStr);
 
