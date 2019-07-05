@@ -1,4 +1,4 @@
-package task2;
+package com.playtika.automation.school.java1.task2;
 
 import java.util.Scanner;
 import java.time.DayOfWeek;

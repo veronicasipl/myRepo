@@ -1,4 +1,4 @@
-package task1;
+package com.playtika.automation.school.java1.task1;
 
 import java.util.Scanner;
 import java.lang.StringBuilder;

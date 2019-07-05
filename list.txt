@@ -1,0 +1,3 @@
+Potato 100 222 100
+Onion 10 2 1
+Carrot 12 15 1

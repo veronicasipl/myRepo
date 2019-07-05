@@ -1,4 +1,4 @@
-package task4;
+package com.playtika.automation.school.java1.task4;
 
 import java.util.Arrays;
 import java.util.Scanner;
