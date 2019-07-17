@@ -1,4 +1,4 @@
-package com.playtika.automation.school.java3.task1.exception;
+package com.playtika.automation.school.java3.exceptionsUsage;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,9 @@ import com.playtika.automation.school.java2.task1.Salad;
 import com.playtika.automation.school.java2.task1.constant.VegetableType;
 import com.playtika.automation.school.java2.task1.factory.VegetableFactory;
 import com.playtika.automation.school.java2.task1.vegetable.Vegetable;
+import com.playtika.automation.school.java3.task1.exception.IngredientDataIsInvalidException;
+import com.playtika.automation.school.java3.task1.exception.IngredientsNotFoundException;
+import com.playtika.automation.school.java3.task1.exception.SaladBowlIsFullException;
 
 public class IngredientExceptionSample {
     public static void main(String[] args) {
@@ -22,7 +25,7 @@ public class IngredientExceptionSample {
             ArrayList<Vegetable> vegetablesList = createInvalidVegetablesList();
             System.out.println(vegetablesList);
         } catch (IngredientDataIsInvalidException e) {
-            System.out.println("Error creating vegetables list. Invalid data");
+            e.printStackTrace();
         }
     }
 
@@ -33,7 +36,7 @@ public class IngredientExceptionSample {
             Salad salad = chef.makeAndGetSalad(vegetablesList);
             System.out.println(salad.getSaladInfo());
         } catch (IngredientsNotFoundException e) {
-            System.out.println("Vegetables list is empty!");
+            e.printStackTrace();
         }
     }
 
@@ -45,7 +48,7 @@ public class IngredientExceptionSample {
                 salad.addComponent(vegetable);
             }
         } catch (SaladBowlIsFullException e) {
-            System.out.println("Salad bowl is full");
+            e.printStackTrace();
         }
     }
 
@@ -76,7 +79,7 @@ public class IngredientExceptionSample {
             Vegetable vegetable = null;
             System.out.println(vegetable.getAmount());
         } catch (NullPointerException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 }

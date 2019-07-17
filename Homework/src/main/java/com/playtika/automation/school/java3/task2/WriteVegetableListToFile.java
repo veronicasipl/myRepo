@@ -1,9 +1,12 @@
 package com.playtika.automation.school.java3.task2;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -13,17 +16,11 @@ import com.playtika.automation.school.java3.task1.exception.IngredientDataIsInva
 
 public class WriteVegetableListToFile {
 
+    public static final String REGEXP = "(\\D+)\\s(\\d+)\\s(\\d+)\\s(\\d+)";
+
     public static void main(String[] args) {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(new File("./Homework/target/listOfVeg.txt"))) {
-            ArrayList<Vegetable> vegetablesList = Helper.createVegetablesList();
-            ObjectOutputStream oos = new ObjectOutputStream(fileOutputStream);
-            oos.writeObject(vegetablesList);
-            oos.close();
-            System.out.println("File written successfully.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         writeTextFile();
+        readTextFile();
     }
 
     public static void writeTextFile() {
@@ -32,10 +29,31 @@ public class WriteVegetableListToFile {
             for (Vegetable item : vegetablesList) {
                 outputStream.println(item.getName() + ' ' + item.getWeight() + ' ' + item.getCalories() + ' ' + item.getAmount());
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File list.txt not found.");
-        } catch (IngredientDataIsInvalidException e) {
-            System.out.println("Error creating vegetables list. Invalid data");
+        } catch (FileNotFoundException | IngredientDataIsInvalidException e) {
+            e.printStackTrace();
+        }
+        System.out.println("FILE IS WRITTEN SUCCESSFULLY");
+    }
+
+    public static void readTextFile() {
+        System.out.println("READING FILE");
+        try (FileInputStream fis = new FileInputStream(new File("./Homework/target/list.txt"))) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+            String aLine;
+            ArrayList<String> listOfVeg = new ArrayList<>();
+            while ((aLine = in.readLine()) != null) {
+                boolean result = aLine.matches(REGEXP);
+                if (result) {
+                    System.out.println("Valid record format");
+                    listOfVeg.add(aLine);
+                } else {
+                    System.out.println("Invalid record format");
+                }
+                System.out.println(aLine);
+            }
+            System.out.println(listOfVeg);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

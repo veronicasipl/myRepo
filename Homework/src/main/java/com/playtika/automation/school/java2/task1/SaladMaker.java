@@ -2,11 +2,11 @@ package com.playtika.automation.school.java2.task1;
 
 import java.util.ArrayList;
 
+import com.playtika.automation.school.java2.common.Helper;
 import com.playtika.automation.school.java2.task1.comparator.AmountComparator;
 import com.playtika.automation.school.java2.task1.vegetable.Vegetable;
 import com.playtika.automation.school.java3.task1.exception.IngredientDataIsInvalidException;
 import com.playtika.automation.school.java3.task1.exception.IngredientsNotFoundException;
-import com.playtika.automation.school.java3.task2.ReadVegetableListFromFile;
 
 public class SaladMaker {
 
@@ -14,21 +14,19 @@ public class SaladMaker {
 
     public static void main(String[] args) {
         try {
-            vegetablesList = ReadVegetableListFromFile.readListFromFile();
+            vegetablesList = Helper.createVegetablesList();
         } catch (IngredientDataIsInvalidException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
-
         sortVegetablesByAmount(vegetablesList);
         printVegetablesList(vegetablesList);
         ArrayList<Vegetable> vegetablesListByRange = getVegetablesListByRange(vegetablesList);
-
         Chef chef = new Chef();
         try {
             Salad salad = chef.makeAndGetSalad(vegetablesList);
             printSaladInfo(salad);
         } catch (IngredientsNotFoundException e) {
-            System.out.println("Vegetables list is empty!");
+            e.printStackTrace();
         }
     }
 
