@@ -20,7 +20,7 @@ public class Chef {
             try {
                 salad.addComponent(vegetable);
             } catch (SaladBowlIsFullException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         return salad;
