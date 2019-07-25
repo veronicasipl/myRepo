@@ -6,7 +6,7 @@ import com.playtika.automation.school.java2.task1.vegetable.Onion;
 import com.playtika.automation.school.java2.task1.vegetable.Potato;
 import com.playtika.automation.school.java2.task1.vegetable.Vegetable;
 
-public abstract class VegetableFactory {
+public class VegetableFactory {
 
     public static Vegetable getVegetable(VegetableType type, String name, int weight, int calories, int amount, int farina) {
         Vegetable toReturn;
@@ -21,7 +21,7 @@ public abstract class VegetableFactory {
                 toReturn = new Potato(name, weight, calories, amount, farina);
                 break;
             default:
-                throw new IllegalArgumentException("Wrong vegetable type:" + type);
+                throw new IllegalArgumentException("Unknown vegetable type:" + type);
         }
         return toReturn;
     }
