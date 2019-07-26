@@ -2,78 +2,90 @@ package com.playtika.automation.school.webServices;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 
-import com.playtika.automation.school.webServices.common.Helper;
+import com.playtika.automation.school.webServices.common.JsonParser;
+import com.playtika.automation.school.webServices.common.RequestExecutor;
 import com.playtika.automation.school.webServices.constant.Endpoint;
+import com.playtika.automation.school.webServices.models.Note;
 import com.playtika.automation.school.webServices.user.User;
 
 public class NoteService {
 
-    public void createNote(User user) throws ClientProtocolException, IOException {
-        System.out.println("CREATE NOTE:");
-        for (int i = 0; i < 2; i++) {
-            String uri = Endpoint.GET_NOTES.getUrl();
-            String json = "{\"content\":\"test\"}";
-            HashMap<String, String> headers = new HashMap<String, String>();
-            headers.put("Content-type", "application/json");
-            headers.put("Authorization", "Bearer" + user.getToken());
-            CloseableHttpResponse response = Helper.httpPost(uri, json, headers);
-            HttpEntity entity = response.getEntity();
-            String content = EntityUtils.toString(entity, "UTF-8");
-            Helper.printResponseStatus(response);
-            System.out.println(content);
-        }
+    private User user;
+    private RequestExecutor requestExecutor;
+
+    public NoteService(User user, RequestExecutor requestExecutor) {
+        this.user = user;
+        this.requestExecutor = requestExecutor;
     }
 
-    public void getAllNotes(User user) throws ClientProtocolException, IOException {
-        System.out.println("ALL USER'S NOTES:");
+    public void createNote() throws IOException {
+        System.out.println("CREATE NOTE:");
         String uri = Endpoint.GET_NOTES.getUrl();
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Accept", "*/*");
-        headers.put("Content-type", "application/json");
-        headers.put("Authorization", "Bearer" + user.getToken());
-        CloseableHttpResponse response = Helper.httpGet(uri, headers);
+        String json = "{\"content\":\"test\"}";
+        CloseableHttpResponse response = requestExecutor.httpPost(uri, json, getHeaders(user.getToken()));
         HttpEntity entity = response.getEntity();
-        String content = EntityUtils.toString(entity);
-        Helper.printResponseStatus(response);
+        String content = EntityUtils.toString(entity, "UTF-8");
+        requestExecutor.printResponseStatus(response);
+        response.close();
         System.out.println(content);
     }
 
-    public void getNoteById(int id, User user) throws ClientProtocolException, IOException {
-        System.out.println("GET NOTE ID 318:");
-        String uri = Endpoint.GET_NOTES.getUrl() + "/" + id;
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Accept", "*/*");
-        headers.put("Content-type", "application/json");
-        headers.put("Authorization", "Bearer" + user.getToken());
-        CloseableHttpResponse response = Helper.httpGet(uri, headers);
-        HttpEntity entity = response.getEntity();
-        Helper.printResponseStatus(response);
+    public List<Note> getAllNotes() throws IOException {
+        System.out.println("ALL USER'S NOTES:");
+        String uri = Endpoint.GET_NOTES.getUrl();
+        CloseableHttpResponse response = requestExecutor.httpGet(uri, getHeaders(user.getToken()));
+        String content = EntityUtils.toString(response.getEntity());
+        requestExecutor.printResponseStatus(response);
+        List<Note> notesList = JsonParser.getNotes(content);
+        response.close();
+        return notesList;
     }
 
-    public void updateNote(int id, User user) throws ClientProtocolException, IOException {
-        System.out.println("UPDATE NOTE ID 377:");
+    public Note getNoteById(int id) throws IOException {
+        System.out.println("GET NOTE ID: " + id);
         String uri = Endpoint.GET_NOTES.getUrl() + "/" + id;
+        CloseableHttpResponse response = requestExecutor.httpGet(uri, getHeaders(user.getToken()));
+        String content = EntityUtils.toString(response.getEntity());
+        requestExecutor.printResponseStatus(response);
+        response.close();
+        return JsonParser.getNote(content);
+    }
+
+    public void updateNote(Note note) throws IOException {
+        System.out.println("UPDATE NOTE ID: " + note.getId());
+        String uri = Endpoint.GET_NOTES.getUrl() + "/" + note.getId();
         String json = "{\"content\":\"testnew\"}";
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Accept", "application/json");
-        headers.put("Content-type", "application/json");
-        headers.put("Authorization", "Bearer" + user.getToken());
-        CloseableHttpResponse response = Helper.httpPut(uri, json, headers);
-        Helper.printResponseStatus(response);
+        CloseableHttpResponse response = requestExecutor.httpPut(uri, json, getHeaders(user.getToken()));
+        response.close();
+        requestExecutor.printResponseStatus(response);
     }
 
-    public void deleteNote(int id, User user) throws ClientProtocolException, IOException {
-        System.out.println("DELETE NOTE 395:");
-        String uri = Endpoint.GET_NOTES.getUrl() + "/" + id;
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Authorization", "Bearer" + user.getToken());
-        CloseableHttpResponse response = Helper.httpDelete(uri, headers);
-        Helper.printResponseStatus(response);
+    public void deleteNote(Note note) throws IOException {
+        System.out.println("DELETE NOTE: " + note.getId());
+        String uri = Endpoint.GET_NOTES.getUrl() + "/" + note.getId();
+        CloseableHttpResponse response = requestExecutor.httpDelete(uri, getHeaders(user.getToken()));
+        response.close();
+        requestExecutor.printResponseStatus(response);
+    }
+
+    public Map<String, String> getHeaders(String value) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-type", "application/json");
+        headers.put("Authorization", "Bearer" + value);
+        return headers;
+    }
+
+    public Note getRandomNote(List<Note> notesList) {
+        Random r = new Random();
+        int randomInt = r.nextInt(notesList.size());
+        return notesList.get(randomInt);
     }
 }
