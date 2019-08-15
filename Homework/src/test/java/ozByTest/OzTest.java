@@ -46,6 +46,7 @@ public class OzTest {
         enterButton.click();
         WebElement loginByEmailButton = driver.findElement(By.xpath("//*[@id=\"loginFormLoginEmailLink\"]"));
         loginByEmailButton.click();
+
         WebElement emailField = driver.findElement(By.name("cl_email"));
         emailField.click();
         emailField.sendKeys(email);
@@ -70,4 +71,6 @@ public class OzTest {
     private void configureImplicitWait() {
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
     }
+
+
 }
